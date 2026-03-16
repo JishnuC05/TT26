@@ -1,0 +1,1 @@
+{"root":["./src/server.ts","./src/lib/prisma.ts","./src/middleware/auth.ts","./src/middleware/errorhandler.ts","./src/middleware/notfound.ts","./src/middleware/validate.ts","./src/routes/auth.ts","./src/routes/books.ts","./src/routes/cart.ts","./src/routes/orders.ts","./src/routes/payments.ts","./src/validation/schemas.ts"],"errors":true,"version":"5.9.3"}

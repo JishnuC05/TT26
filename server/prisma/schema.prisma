@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("USER")
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  orders    Order[]
+  cart      Cart?
+
+  @@map("users")
+}
+
+model Book {
+  id            String   @id @default(cuid())
+  title         String
+  author        String
+  price         Float
+  category      String
+  cover         String
+  description   String
+  rating        Float    @default(0)
+  reviews       Int      @default(0)
+  stock         Int      @default(0)
+  isbn          String   @unique
+  pages         Int
+  publishedYear Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // Relations
+  orderItems    OrderItem[]
+  cartItems     CartItem[]
+
+  @@map("books")
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  userId      String
+  userName    String
+  totalPrice  Float
+  status      String      @default("PENDING")
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id       String @id @default(cuid())
+  orderId  String
+  bookId   String
+  quantity Int
+  price    Float
+
+  // Relations
+  order    Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  book     Book  @relation(fields: [bookId], references: [id])
+
+  @@map("order_items")
+}
+
+model Cart {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // Relations
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id       String @id @default(cuid())
+  cartId   String
+  bookId   String
+  quantity Int
+
+  // Relations
+  cart Cart @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  book Book @relation(fields: [bookId], references: [id])
+
+  @@map("cart_items")
+}
+
