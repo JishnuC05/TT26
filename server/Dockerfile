@@ -1,5 +1,8 @@
-# Use the official Node.js 20 Alpine lightweight image
-FROM node:20-alpine
+# Use Debian-based slim image to avoid Alpine/musl OpenSSL Prisma issues
+FROM node:20-slim
+
+# Install OpenSSL which is required by Prisma
+RUN apt-get update -y && apt-get install -y openssl
 
 # Set the working directory inside the container
 WORKDIR /app
